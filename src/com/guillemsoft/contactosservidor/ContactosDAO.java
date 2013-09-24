@@ -56,4 +56,9 @@ public class ContactosDAO {
 		    }
 		}
 	}
+	
+	public List<Contacto> buscarContactos(String nombre, String apellidos){
+		return null;
+		
+	}
 }

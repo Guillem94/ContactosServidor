@@ -1,8 +1,6 @@
 package com.guillemsoft.contactosservidor;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
@@ -11,16 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class ListarContactosServlet
+ * Servlet implementation class EliminarContactoServlet
  */
-@WebServlet("/ListarContactosServlet")
-public class ListarContactosServlet extends HttpServlet {
+@WebServlet({ "/EliminarContactoServlet", "/BorrarContactoServlet" })
+public class EliminarContactoServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListarContactosServlet() {
+    public EliminarContactoServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,26 +27,33 @@ public class ListarContactosServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		ContactosDAO contactosDAO=new ContactosDAO();
-		List<Contacto> contactos =contactosDAO.recuperarContactos();
-		ServletOutputStream out = response.getOutputStream();
-		out.println("<html><head><title>Lista de contactos</title></head><body><ul>");
-		for(int i=0;i<contactos.size();i++){
-			Contacto contacto=contactos.get(i);
-		out.println("<li><a href=\"ModificarContacto.jsp?id="+contacto.getId()+"\">"+contacto.getNombre()+"</a></li>");
-		} 
-		out.println("</ul>");
-		out.println("<a href=\"index.html\">Volver</a>");
-		out.println("</body></html>");
-		out.close(); 
+		processRequest(request, response);
 	}
 
+	
+	private void processRequest(HttpServletRequest request, HttpServletResponse response){
+		String id=request.getParameter("id");
+		ContactosDAO contactosDAO=new  ContactosDAO();
+		contactosDAO.eliminarContacto(Integer.parseInt(id));
+		try {
+			ServletOutputStream out = response.getOutputStream();
+			out.println("<html><head><title>Contacto actualizado</title></head><body>");
+			out.println("Contacto eliminado correctamente <br />");
+			out.println("<a href=\"index.html\">Volver</a>");
+			out.println("</body></html>");
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+processRequest(request, response);
+	
 	}
 
 }
